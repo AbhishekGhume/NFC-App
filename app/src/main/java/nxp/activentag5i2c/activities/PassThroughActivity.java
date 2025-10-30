@@ -472,8 +472,257 @@
 
 
 
+// code with write and read operations with user input text 👇
 
 
+
+//package nxp.activentag5i2c.activities;
+//
+//import android.os.AsyncTask;
+//import android.os.Bundle;
+//import android.support.design.widget.Snackbar;
+//import android.view.View;
+//import android.widget.EditText;
+//import android.widget.LinearLayout;
+//import android.widget.TextView;
+//import android.widget.ToggleButton;
+//
+//import com.mobileknowledge.library.utils.Utils;
+//
+//import java.io.ByteArrayOutputStream;
+//
+//import nxp.activentag5i2c.R;
+//import nxp.activentag5i2c.utils.Constants;
+//import nxp.activentag5i2c.utils.Parser;
+//
+//import static nxp.activentag5i2c.nfc.RFCommands.cmd_readSRAM;
+//import static nxp.activentag5i2c.nfc.RFCommands.cmd_readTagStatus;
+//import static nxp.activentag5i2c.nfc.RFCommands.cmd_writeSRAM;
+//import static nxp.activentag5i2c.utils.Constants.SRAM_LOOP_SIZE;
+//import static nxp.activentag5i2c.utils.Constants.SRAM_READ_SIZE;
+//import static nxp.activentag5i2c.utils.Constants.SRAM_WRITE_SIZE;
+//import static nxp.activentag5i2c.utils.Constants.TOAST_LENGTH;
+//
+//public class PassThroughActivity extends MainActivity {
+//
+//    private StringBuilder logTextPassThrough = new StringBuilder();
+//    private TextView textLog;
+//    private final byte[] sramDataToWrite = new byte[SRAM_WRITE_SIZE];
+//
+//    private TextView textReadSRAM;
+//    private TextView textDirection;
+//    private TextView textWriteSRAM;
+//    private EditText editWriteSRAMInput;
+//
+//    private ToggleButton buttonStartDemo;
+//    private boolean stopLoop;
+//
+//    @Override
+//    protected void onCreate(Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//        setContentView(R.layout.activity_passthrough);
+//
+//        LinearLayout linearLayoutLog = findViewById(R.id.linearLayoutLog);
+//        buttonStartDemo = findViewById(R.id.buttonStartDemo);
+//        textLog = linearLayoutLog.findViewById(R.id.textLog);
+//        textWriteSRAM = findViewById(R.id.textWriteSRAM);
+//        textReadSRAM = findViewById(R.id.textReadSRAM);
+//        textDirection = findViewById(R.id.textDirection);
+//        editWriteSRAMInput = findViewById(R.id.editWriteSRAMInput);
+//
+//        stopLoop = false;
+//
+//        buttonStartDemo.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (buttonStartDemo.isChecked()) {
+//                    // Convert user input string to bytes
+//                    String input = editWriteSRAMInput.getText().toString().trim();
+//                    if (!input.isEmpty()) {
+//                        try {
+//                            byte[] userBytes = input.getBytes("UTF-8");
+//
+//                            int len = Math.min(userBytes.length, SRAM_WRITE_SIZE);
+//                            System.arraycopy(userBytes, 0, sramDataToWrite, 0, len);
+//
+//                            // Fill remaining bytes with zeros
+//                            for (int i = len; i < SRAM_WRITE_SIZE; i++) {
+//                                sramDataToWrite[i] = 0x00;
+//                            }
+//
+//                            // Convert to hex string for display
+//                            StringBuilder sb = new StringBuilder();
+//                            for (int i = 0; i < len; i++) {
+//                                sb.append("0x")
+//                                        .append(String.format("%02X", sramDataToWrite[i]))
+//                                        .append(i < len - 1 ? ", " : "");
+//                            }
+//
+//                            textWriteSRAM.setText(sb.toString());
+//
+//                        } catch (Exception e) {
+//                            Snackbar.make(v, "Error encoding input to bytes!", Snackbar.LENGTH_LONG).show();
+//                            buttonStartDemo.setChecked(false);
+//                            return;
+//                        }
+//                    } else {
+//                        Snackbar.make(v, "Please enter text first!", Snackbar.LENGTH_LONG).show();
+//                        buttonStartDemo.setChecked(false);
+//                        return;
+//                    }
+//
+//                    stopLoop = false;
+//                    new SRAMLoop().execute();
+//                    buttonStartDemo.setBackgroundResource(R.drawable.button_pushed_passthrough);
+//                    buttonStartDemo.setTextColor(getResources().getColor(R.color.buttonBlue));
+//                    buttonStartDemo.setPadding(20, 0, 20, 0);
+//                } else {
+//                    stopLoop = true;
+//                    buttonStartDemo.setBackgroundResource(R.drawable.button_shape);
+//                    buttonStartDemo.setTextColor(getResources().getColor(R.color.buttonWhite));
+//                    buttonStartDemo.setPadding(20, 0, 20, 0);
+//                }
+//            }
+//        });
+//    }
+//
+//    @Override
+//    protected void onPause() {
+//        super.onPause();
+//        stopLoop = true;
+//    }
+//
+//    private class SRAMLoop extends AsyncTask<Void, Constants.PassThroughDirection, Boolean> {
+//        byte[] finalCommandWriteSRAM;
+//        byte[] responseWriteSRAM;
+//        final byte[] sramDataRead = new byte[SRAM_READ_SIZE];
+//        byte[] responseRead;
+//
+//        @Override
+//        protected Boolean doInBackground(Void... params) {
+//            int readCounter = 0;
+//            int writeCounter = 0;
+//
+//            try {
+//                ByteArrayOutputStream copySRAMData = new ByteArrayOutputStream();
+//                copySRAMData.write(cmd_writeSRAM);
+//                copySRAMData.write(sramDataToWrite);
+//                finalCommandWriteSRAM = copySRAMData.toByteArray();
+//
+//                while (!stopLoop) {
+//                    byte[] responseTagStatus = sendCommand(cmd_readTagStatus);
+//
+//                    if (Parser.IsBitSet(responseTagStatus[1], 2)) {
+//                        readCounter = 0;
+//
+//                        if (writeCounter < SRAM_LOOP_SIZE) {
+//                            if (!Parser.IsBitSet(responseTagStatus[1], 5)) {
+//                                responseWriteSRAM = sendCommand(finalCommandWriteSRAM);
+//                                publishProgress(Constants.PassThroughDirection.RF_I2C);
+//                                writeCounter++;
+//                            }
+//                        }
+//                    } else {
+//                        writeCounter = 0;
+//
+//                        if (readCounter < SRAM_LOOP_SIZE) {
+//                            if (Parser.IsBitSet(responseTagStatus[1], 5)) {
+//                                responseRead = sendCommand(cmd_readSRAM);
+//                                publishProgress(Constants.PassThroughDirection.I2C_RF);
+//                                readCounter++;
+//                            }
+//                        }
+//                    }
+//                }
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//                Snackbar.make(findViewById(android.R.id.content),
+//                        "Operation interrupted! Please try again", TOAST_LENGTH).show();
+//                return false;
+//            }
+//            return true;
+//        }
+//
+//        @Override
+//        protected void onPostExecute(Boolean result) {
+//            if (result) {
+//                writeSendLog(finalCommandWriteSRAM);
+//                writeReceiveLog(responseWriteSRAM);
+//                writeSendLog(cmd_readSRAM);
+//                writeReceiveLog(responseRead);
+//                textLog.setText(logTextPassThrough.toString());
+//            }
+//            buttonStartDemo.setBackgroundResource(R.drawable.button_shape);
+//            buttonStartDemo.setTextColor(getResources().getColor(R.color.buttonWhite));
+//            buttonStartDemo.setPadding(20, 0, 20, 0);
+//            buttonStartDemo.setChecked(false);
+//        }
+//
+//        @Override
+//        protected void onProgressUpdate(Constants.PassThroughDirection... values) {
+//            if (values[0] == Constants.PassThroughDirection.RF_I2C) {
+//                textDirection.setText(getResources().getString(R.string.pt_direction_rf_i2c));
+//            } else {
+//                textDirection.setText(getResources().getString(R.string.pt_direction_i2c_rf));
+//
+//                try {
+//                    textReadSRAM.setText("");
+//                    System.arraycopy(responseRead, 1, sramDataRead, 0, sramDataRead.length);
+//
+//                    StringBuilder sb = new StringBuilder();
+//                    for (int i = 0; i < sramDataRead.length; i++) {
+//                        sb.append("0x")
+//                                .append(String.format("%02X", sramDataRead[i]))
+//                                .append(i < sramDataRead.length - 1 ? ", " : "");
+//                    }
+//                    textReadSRAM.setText(sb.toString());
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }
+//    }
+//
+//    private void writeSendLog(byte[] command) {
+//        logTextPassThrough = new StringBuilder();
+//        logTextPassThrough.append("NFC -> ").append(Utils.byteArrayToHex(command));
+//        writeLogFile("GPIO-Logs", logTextPassThrough.toString());
+//        logTextPassThrough.append(System.getProperty("line.separator"));
+//        writeLogFile("GPIO-Logs", logTextPassThrough.toString());
+//    }
+//
+//    private void writeReceiveLog(byte[] response) {
+//        if (response != null) {
+//            logTextPassThrough.append("TAG <- ").append(Utils.byteArrayToHex(response));
+//            writeLogFile("GPIO-Logs", logTextPassThrough.toString());
+//            logTextPassThrough.append(System.getProperty("line.separator"));
+//            writeLogFile("GPIO-Logs", logTextPassThrough.toString());
+//        }
+//    }
+//}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// code with only write operation with user input text 👇
 
 
 package nxp.activentag5i2c.activities;
@@ -495,11 +744,9 @@ import nxp.activentag5i2c.R;
 import nxp.activentag5i2c.utils.Constants;
 import nxp.activentag5i2c.utils.Parser;
 
-import static nxp.activentag5i2c.nfc.RFCommands.cmd_readSRAM;
-import static nxp.activentag5i2c.nfc.RFCommands.cmd_readTagStatus;
 import static nxp.activentag5i2c.nfc.RFCommands.cmd_writeSRAM;
+import static nxp.activentag5i2c.nfc.RFCommands.cmd_readTagStatus;
 import static nxp.activentag5i2c.utils.Constants.SRAM_LOOP_SIZE;
-import static nxp.activentag5i2c.utils.Constants.SRAM_READ_SIZE;
 import static nxp.activentag5i2c.utils.Constants.SRAM_WRITE_SIZE;
 import static nxp.activentag5i2c.utils.Constants.TOAST_LENGTH;
 
@@ -509,12 +756,11 @@ public class PassThroughActivity extends MainActivity {
     private TextView textLog;
     private final byte[] sramDataToWrite = new byte[SRAM_WRITE_SIZE];
 
-    private TextView textReadSRAM;
     private TextView textDirection;
     private TextView textWriteSRAM;
     private EditText editWriteSRAMInput;
-
     private ToggleButton buttonStartDemo;
+
     private boolean stopLoop;
 
     @Override
@@ -526,7 +772,6 @@ public class PassThroughActivity extends MainActivity {
         buttonStartDemo = findViewById(R.id.buttonStartDemo);
         textLog = linearLayoutLog.findViewById(R.id.textLog);
         textWriteSRAM = findViewById(R.id.textWriteSRAM);
-        textReadSRAM = findViewById(R.id.textReadSRAM);
         textDirection = findViewById(R.id.textDirection);
         editWriteSRAMInput = findViewById(R.id.editWriteSRAMInput);
 
@@ -536,51 +781,48 @@ public class PassThroughActivity extends MainActivity {
             @Override
             public void onClick(View v) {
                 if (buttonStartDemo.isChecked()) {
-                    // Convert user input string to bytes
+                    // Convert user text into bytes
                     String input = editWriteSRAMInput.getText().toString().trim();
-                    if (!input.isEmpty()) {
-                        try {
-                            byte[] userBytes = input.getBytes("UTF-8");
-
-                            int len = Math.min(userBytes.length, SRAM_WRITE_SIZE);
-                            System.arraycopy(userBytes, 0, sramDataToWrite, 0, len);
-
-                            // Fill remaining bytes with zeros
-                            for (int i = len; i < SRAM_WRITE_SIZE; i++) {
-                                sramDataToWrite[i] = 0x00;
-                            }
-
-                            // Convert to hex string for display
-                            StringBuilder sb = new StringBuilder();
-                            for (int i = 0; i < len; i++) {
-                                sb.append("0x")
-                                        .append(String.format("%02X", sramDataToWrite[i]))
-                                        .append(i < len - 1 ? ", " : "");
-                            }
-
-                            textWriteSRAM.setText(sb.toString());
-
-                        } catch (Exception e) {
-                            Snackbar.make(v, "Error encoding input to bytes!", Snackbar.LENGTH_LONG).show();
-                            buttonStartDemo.setChecked(false);
-                            return;
-                        }
-                    } else {
+                    if (input.isEmpty()) {
                         Snackbar.make(v, "Please enter text first!", Snackbar.LENGTH_LONG).show();
                         buttonStartDemo.setChecked(false);
                         return;
                     }
 
+                    try {
+                        byte[] userBytes = input.getBytes("UTF-8");
+
+                        int len = Math.min(userBytes.length, SRAM_WRITE_SIZE);
+                        System.arraycopy(userBytes, 0, sramDataToWrite, 0, len);
+
+                        // Fill remaining with zeros
+                        for (int i = len; i < SRAM_WRITE_SIZE; i++) {
+                            sramDataToWrite[i] = 0x00;
+                        }
+
+                        // Display data as hex
+                        StringBuilder sb = new StringBuilder();
+                        for (int i = 0; i < len; i++) {
+                            sb.append("0x")
+                                    .append(String.format("%02X", sramDataToWrite[i]))
+                                    .append(i < len - 1 ? ", " : "");
+                        }
+                        textWriteSRAM.setText(sb.toString());
+
+                    } catch (Exception e) {
+                        Snackbar.make(v, "Error converting text to bytes!", Snackbar.LENGTH_LONG).show();
+                        buttonStartDemo.setChecked(false);
+                        return;
+                    }
+
                     stopLoop = false;
-                    new SRAMLoop().execute();
+                    new SRAMWriteTask().execute();
                     buttonStartDemo.setBackgroundResource(R.drawable.button_pushed_passthrough);
                     buttonStartDemo.setTextColor(getResources().getColor(R.color.buttonBlue));
-                    buttonStartDemo.setPadding(20, 0, 20, 0);
                 } else {
                     stopLoop = true;
                     buttonStartDemo.setBackgroundResource(R.drawable.button_shape);
                     buttonStartDemo.setTextColor(getResources().getColor(R.color.buttonWhite));
-                    buttonStartDemo.setPadding(20, 0, 20, 0);
                 }
             }
         });
@@ -592,15 +834,15 @@ public class PassThroughActivity extends MainActivity {
         stopLoop = true;
     }
 
-    private class SRAMLoop extends AsyncTask<Void, Constants.PassThroughDirection, Boolean> {
+    /**
+     * AsyncTask for continuous write loop only (RF → I²C)
+     */
+    private class SRAMWriteTask extends AsyncTask<Void, Void, Boolean> {
         byte[] finalCommandWriteSRAM;
         byte[] responseWriteSRAM;
-        final byte[] sramDataRead = new byte[SRAM_READ_SIZE];
-        byte[] responseRead;
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            int readCounter = 0;
             int writeCounter = 0;
 
             try {
@@ -609,38 +851,30 @@ public class PassThroughActivity extends MainActivity {
                 copySRAMData.write(sramDataToWrite);
                 finalCommandWriteSRAM = copySRAMData.toByteArray();
 
-                while (!stopLoop) {
+                while (!stopLoop && writeCounter < SRAM_LOOP_SIZE) {
                     byte[] responseTagStatus = sendCommand(cmd_readTagStatus);
 
+                    // Bit 2 means I²C not accessing SRAM (safe to write)
                     if (Parser.IsBitSet(responseTagStatus[1], 2)) {
-                        readCounter = 0;
-
-                        if (writeCounter < SRAM_LOOP_SIZE) {
-                            if (!Parser.IsBitSet(responseTagStatus[1], 5)) {
-                                responseWriteSRAM = sendCommand(finalCommandWriteSRAM);
-                                publishProgress(Constants.PassThroughDirection.RF_I2C);
-                                writeCounter++;
-                            }
-                        }
-                    } else {
-                        writeCounter = 0;
-
-                        if (readCounter < SRAM_LOOP_SIZE) {
-                            if (Parser.IsBitSet(responseTagStatus[1], 5)) {
-                                responseRead = sendCommand(cmd_readSRAM);
-                                publishProgress(Constants.PassThroughDirection.I2C_RF);
-                                readCounter++;
-                            }
+                        if (!Parser.IsBitSet(responseTagStatus[1], 5)) {
+                            responseWriteSRAM = sendCommand(finalCommandWriteSRAM);
+                            publishProgress();
+                            writeCounter++;
                         }
                     }
                 }
             } catch (Exception e) {
                 e.printStackTrace();
                 Snackbar.make(findViewById(android.R.id.content),
-                        "Operation interrupted! Please try again", TOAST_LENGTH).show();
+                        "Write operation interrupted! Try again.", TOAST_LENGTH).show();
                 return false;
             }
             return true;
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            textDirection.setText(getResources().getString(R.string.pt_direction_rf_i2c));
         }
 
         @Override
@@ -648,38 +882,11 @@ public class PassThroughActivity extends MainActivity {
             if (result) {
                 writeSendLog(finalCommandWriteSRAM);
                 writeReceiveLog(responseWriteSRAM);
-                writeSendLog(cmd_readSRAM);
-                writeReceiveLog(responseRead);
                 textLog.setText(logTextPassThrough.toString());
             }
             buttonStartDemo.setBackgroundResource(R.drawable.button_shape);
             buttonStartDemo.setTextColor(getResources().getColor(R.color.buttonWhite));
-            buttonStartDemo.setPadding(20, 0, 20, 0);
             buttonStartDemo.setChecked(false);
-        }
-
-        @Override
-        protected void onProgressUpdate(Constants.PassThroughDirection... values) {
-            if (values[0] == Constants.PassThroughDirection.RF_I2C) {
-                textDirection.setText(getResources().getString(R.string.pt_direction_rf_i2c));
-            } else {
-                textDirection.setText(getResources().getString(R.string.pt_direction_i2c_rf));
-
-                try {
-                    textReadSRAM.setText("");
-                    System.arraycopy(responseRead, 1, sramDataRead, 0, sramDataRead.length);
-
-                    StringBuilder sb = new StringBuilder();
-                    for (int i = 0; i < sramDataRead.length; i++) {
-                        sb.append("0x")
-                                .append(String.format("%02X", sramDataRead[i]))
-                                .append(i < sramDataRead.length - 1 ? ", " : "");
-                    }
-                    textReadSRAM.setText(sb.toString());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
         }
     }
 
@@ -687,16 +894,14 @@ public class PassThroughActivity extends MainActivity {
         logTextPassThrough = new StringBuilder();
         logTextPassThrough.append("NFC -> ").append(Utils.byteArrayToHex(command));
         writeLogFile("GPIO-Logs", logTextPassThrough.toString());
-        logTextPassThrough.append(System.getProperty("line.separator"));
-        writeLogFile("GPIO-Logs", logTextPassThrough.toString());
+        logTextPassThrough.append(System.lineSeparator());
     }
 
     private void writeReceiveLog(byte[] response) {
         if (response != null) {
             logTextPassThrough.append("TAG <- ").append(Utils.byteArrayToHex(response));
             writeLogFile("GPIO-Logs", logTextPassThrough.toString());
-            logTextPassThrough.append(System.getProperty("line.separator"));
-            writeLogFile("GPIO-Logs", logTextPassThrough.toString());
+            logTextPassThrough.append(System.lineSeparator());
         }
     }
 }

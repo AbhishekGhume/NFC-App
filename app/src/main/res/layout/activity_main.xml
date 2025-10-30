@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="nxp.activentag5i2c.activities.MainActivity">
 
     <LinearLayout
@@ -12,155 +12,39 @@
         android:orientation="vertical"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
-        android:paddingTop="20dp">
+        android:paddingTop="20dp"
+        android:gravity="center">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
+            android:layout_margin="20dp"
             android:textColor="#000000"
-            android:text="@string/main_label_gpio_pwm"/>
-
-        <Button
-            android:id="@+id/button_gpio"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/button_shape"
-            android:text="@string/config_gpio"
-            android:textColor="#FFFFFF"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <LinearLayout
-            android:showDividers="middle"
-            android:layout_height="15dp"
-            android:layout_width="0dp"/>
-
-        <Button
-            android:id="@+id/button_pwm"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/button_shape"
-            android:text="@string/config_pwm"
-            android:textColor="#FFFFFF"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.502"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <LinearLayout
-            android:showDividers="middle"
-            android:layout_height="15dp"
-            android:layout_width="0dp"/>
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:text="NTAG 5 Pass-Through Mode"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:textColor="#000000"
-            android:text="@string/main_label_slave"/>
+            android:layout_margin="10dp"
+            android:textColor="#666666"
+            android:textAlignment="center"
+            android:text="Transfer data between RF and I²C interfaces"/>
 
         <Button
             android:id="@+id/button_passthrough"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:padding="20dp"
             android:background="@drawable/button_shape"
             android:text="@string/pass_through"
-            android:textColor="#FFFFFF"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.502"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <LinearLayout
-            android:showDividers="middle"
-            android:layout_height="15dp"
-            android:layout_width="0dp"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:textColor="#000000"
-            android:text="@string/main_label_master"/>
-
-        <Button
-            android:id="@+id/button_i2c_master"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/button_shape"
-            android:text="@string/i2c_master"
+            android:textSize="18sp"
             android:textColor="#FFFFFF"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <LinearLayout
-            android:showDividers="middle"
-            android:layout_height="15dp"
-            android:layout_width="0dp"/>
-
-        <Button
-            android:id="@+id/button_ALM"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/button_shape"
-            android:text="@string/config_alm"
-            android:textColor="#FFFFFF"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.502"
-            app:layout_constraintStart_toStartOf="parent"
-            android:visibility="gone"/>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:layout_marginVertical="15dp"
-            android:background="#000000"/>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_gravity="center_horizontal">
-
-            <Button
-                android:id="@+id/button_set_i2c_slave_mode"
-                android:layout_width="110dp"
-                android:layout_height="60dp"
-                android:layout_margin="5dp"
-                android:textSize="12dp"
-                android:background="@drawable/button_set_config_shape"
-                android:text="@string/menu_setI2CSlave"
-                android:textColor="#FFFFFF"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.502"
-                app:layout_constraintStart_toStartOf="parent"/>
-
-            <Button
-                android:id="@+id/button_set_i2c_master_mode"
-                android:layout_width="110dp"
-                android:layout_height="60dp"
-                android:layout_margin="5dp"
-                android:textSize="12dp"
-                android:background="@drawable/button_set_config_shape"
-                android:text="@string/menu_setI2CMaster"
-                android:textColor="#FFFFFF"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.502"
-                app:layout_constraintStart_toStartOf="parent"/>
-
-            <Button
-                android:id="@+id/button_set_gpio_pwm_mode"
-                android:layout_width="110dp"
-                android:layout_height="60dp"
-                android:layout_margin="5dp"
-                android:textSize="12dp"
-                android:background="@drawable/button_set_config_shape"
-                android:text="@string/menu_setGPIOPWM"
-                android:textColor="#FFFFFF"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.502"
-                app:layout_constraintStart_toStartOf="parent"/>
-
-        </LinearLayout>
     </LinearLayout>
 
     <ImageView
@@ -170,10 +54,6 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="12dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/nxp_semiconductors_logo"
-        android:contentDescription="TODO"
-        tools:ignore="ContentDescription,HardcodedText" />
+        app:srcCompat="@drawable/whirlpool_logo"
+        android:contentDescription="NXP Logo" />
 </RelativeLayout>

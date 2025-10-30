@@ -59,11 +59,11 @@ public class MainActivity extends BaseActionBarActivity{
 
         TextView Title = (TextView) view.findViewById(R.id.actionbar_title);
 
-        getSupportActionBar().setCustomView(view,params);
-        getSupportActionBar().setDisplayShowCustomEnabled(true); //show custom title
-        getSupportActionBar().setDisplayShowTitleEnabled(false); //hide the default title
+        getSupportActionBar().setCustomView(view, params);
+        getSupportActionBar().setDisplayShowCustomEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        //Buttons definition
+        // Only Pass-Through button
         Button buttonPassThrough = findViewById(R.id.button_passthrough);
         buttonPassThrough.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,149 +73,11 @@ public class MainActivity extends BaseActionBarActivity{
             }
         });
 
-        Button buttonPWM = findViewById(R.id.button_pwm);
-        buttonPWM.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, PWMActivity.class);
-                MainActivity.this.startActivity(intent);
-            }
-        });
-
-        Button buttonGPIO = findViewById(R.id.button_gpio);
-        buttonGPIO.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, GPIOActivity.class);
-                intent.putExtra(Constants.ARGUMENT_ACTION_READ_GPIOINPUT, false); //Set false as default configuration
-                MainActivity.this.startActivity(intent);
-            }
-        });
-
-        Button buttonI2CMaster = findViewById(R.id.button_i2c_master);
-        buttonI2CMaster.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, I2CMasterActivity.class);
-                MainActivity.this.startActivity(intent);
-            }
-        });
-
-        Button buttonALM = findViewById(R.id.button_ALM);
-        buttonALM.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, ALMActivity.class);
-                MainActivity.this.startActivity(intent);
-            }
-        });
-
-        Button buttonSetI2cSlaveMode = findViewById(R.id.button_set_i2c_slave_mode);
-        buttonSetI2cSlaveMode.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                new AlertDialog.Builder(MainActivity.this)
-                        .setTitle(getResources().getString(R.string.title_tag_mode_change))
-                        .setMessage(getResources().getString(R.string.message_tag_mode_change))
-                        .setPositiveButton(getResources().getString(R.string.tag_mode_change_yes),
-                                new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog,
-                                                        int which) {
-                                        byte[] response = sendCommand(cmd_activateI2CSlave);
-                                        byte[] i2cAddr = sendCommand(cmd_readI2cAddr);
-                                        if (response != null && i2cAddr[1] == 0x54)
-                                            Snackbar.make(findViewById(android.R.id.content), "Tag correctly configured, " +
-                                                    "please reset the tag to set the new configuration", TOAST_LENGTH)
-                                                    .show();
-                                        else if(response != null && i2cAddr[1] != 0x54)
-                                            Snackbar.make(findViewById(android.R.id.content), "NTAG5 I²C Slave Address is " + Integer.toHexString(i2cAddr[1]) + "h! Re-configure FW !", TOAST_LENGTH)
-                                                    .show();
-                                    }
-                                })
-                        .setNegativeButton(getResources().getString(R.string.tag_mode_change_no),
-                                new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog,
-                                                        int which) {
-                                        dialog.dismiss();
-                                    }
-                                }).show();
-            }
-        });
-
-        Button buttonSetI2cMasterMode = findViewById(R.id.button_set_i2c_master_mode);
-        buttonSetI2cMasterMode.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                new AlertDialog.Builder(MainActivity.this)
-                        .setTitle(getResources().getString(R.string.title_tag_mode_change))
-                        .setMessage(getResources().getString(R.string.message_tag_mode_change))
-                        .setPositiveButton(getResources().getString(R.string.tag_mode_change_yes),
-                                new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog,
-                                                        int which) {
-                                        byte[] response = sendCommand(cmd_activateI2CMaster);
-                                        if (response != null)
-                                            Snackbar.make(findViewById(android.R.id.content), "Tag correctly configured, " +
-                                                    "please reset the tag to set the new configuration", TOAST_LENGTH)
-                                                    .show();
-                                    }
-                                })
-                        .setNegativeButton(getResources().getString(R.string.tag_mode_change_no),
-                                new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog,
-                                                        int which) {
-                                        dialog.dismiss();
-                                    }
-                                }).show();
-            }
-        });
-
-        Button buttonSetGpioPwmMode = findViewById(R.id.button_set_gpio_pwm_mode);
-        buttonSetGpioPwmMode.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                new AlertDialog.Builder(MainActivity.this)
-                        .setTitle(getResources().getString(R.string.title_tag_mode_change))
-                        .setMessage(getResources().getString(R.string.message_tag_mode_change))
-                        .setPositiveButton(getResources().getString(R.string.tag_mode_change_yes),
-                                new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog,
-                                                        int which) {
-                                        byte[] response = sendCommand(cmd_activateGPIOPWM);
-                                        if (response != null)
-                                            Snackbar.make(findViewById(android.R.id.content), "Tag correctly configured, " +
-                                                    "please reset the tag to set the new configuration", TOAST_LENGTH)
-                                                    .show();
-                                    }
-                                })
-                        .setNegativeButton(getResources().getString(R.string.tag_mode_change_no),
-                                new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog,
-                                                        int which) {
-                                        dialog.dismiss();
-                                    }
-                                }).show();
-            }
-        });
-
-        // Create directory and txt files for logs
+        // Create directory and txt file for logs
         mkFolder("NTAG5 I2C Logs");
-        createLogFile("MasterChannel-Logs");
-        createLogFile("GPIO-Logs");
-        createLogFile("PWM-Logs");
         createLogFile("Pass-Through-Logs");
 
         Date currentTime = Calendar.getInstance().getTime();
-
-        writeLogFile("MasterChannel-Logs", "\n" + currentTime.toString() + "\n\n");
-        writeLogFile("GPIO-Logs", "\n" + currentTime.toString() + "\n\n");
-        writeLogFile("PWM-Logs", "\n" + currentTime.toString() + "\n\n");
         writeLogFile("Pass-Through-Logs", "\n" + currentTime.toString() + "\n\n");
     }
 
@@ -223,38 +85,16 @@ public class MainActivity extends BaseActionBarActivity{
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         if (tag.getTechList()[0].equals("android.nfc.tech.NfcV")) {
-            switch (getUseCaseConfig()) {
-                case I2C_SLAVE:
-                    Snackbar.make(findViewById(android.R.id.content),
-                            "I2C slave configuration", TOAST_LENGTH).show();
-                    break;
-                case I2C_MASTER:
-                    Snackbar.make(findViewById(android.R.id.content),
-                            "I2C master configuration", TOAST_LENGTH).show();
-                    break;
-                case PWM_GPIO:
-                    Snackbar.make(findViewById(android.R.id.content),
-                            "GPIO/PWM configuration", TOAST_LENGTH).show();
-                    break;
-                case HOST_INTERFACES_DISABLED:
-                    Snackbar.make(findViewById(android.R.id.content),
-                            "Host interfaces disabled configuration",
-                            TOAST_LENGTH).show();
-                    break;
-                default:
-                    Snackbar.make(findViewById(android.R.id.content),
-                            "Could not read the configuration",
-                            TOAST_LENGTH).show();
-            }
-        } else{
+            Snackbar.make(findViewById(android.R.id.content),
+                    "NFC Tag Detected - Ready for Pass-Through", TOAST_LENGTH).show();
+        } else {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle(getResources().getString(R.string.dialog_tag_not_supported_title))
                     .setMessage(getResources().getString(R.string.dialog_tag_not_supported_msg))
                     .setPositiveButton(getResources().getString(R.string.dialog_tag_not_supported_btn),
                             new DialogInterface.OnClickListener() {
                                 @Override
-                                public void onClick(DialogInterface dialog,
-                                                    int which) {
+                                public void onClick(DialogInterface dialog, int which) {
                                     dialog.dismiss();
                                 }
                             }).show();
