@@ -1,0 +1,14 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+
+    <!-- Margins for dark green text layout -->
+
+    <!-- Margins for application info layout -->
+
+    <!-- Margins for apps white text layout -->
+
+    <!-- Margins for supported NFC Technologies and BLE Devices list entries-->
+    <dimen name="pairing_list_entry_horizontal_margin">4dp</dimen>
+
+    <!-- Guidance activity tab circle dimensions -->
+</resources>

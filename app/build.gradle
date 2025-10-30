@@ -1,0 +1,37 @@
+apply plugin: 'com.android.application'
+
+android {
+    namespace "nxp.activentag5i2c"
+    compileSdkVersion 27
+
+    defaultConfig {
+        applicationId "nxp.activentag5i2c"
+        minSdkVersion 19
+        targetSdkVersion 27
+        versionCode 1
+        versionName "1.1"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    repositories {
+        flatDir {
+            dirs 'libs'
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.android.support:appcompat-v7:27.1.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    implementation files('libs/UtilsLibrary-1.0.3.jar')   // ✅ changed from compile → implementation
+    implementation 'com.android.support:design:27.1.0'    // ✅ changed from compile → implementation
+}

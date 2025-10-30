@@ -1,0 +1,104 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name">NTAG 5 - Dev. kit Use Cases</string>
+
+    <!-->Write/read buttons<-->
+    <string name="write_button">Write config</string>
+    <string name="read_button">Read config</string>
+
+    <!-->Common texts<-->
+    <string name="channel_0_gpio">GPIO0 pin</string>
+    <string name="channel_1_gpio">GPIO1 pin</string>
+    <string name="channel_0_pwm">PWM0 pin</string>
+    <string name="channel_1_pwm">PWM1 pin</string>
+    <string name="log_text">Communication log: </string>
+
+    <!-->Main screen labels<-->
+    <string name="main_label_gpio_pwm">GPIO/PWM configuration</string>
+    <string name="main_label_slave">I<sup><small>2</small></sup>C Slave configurationn</string>
+    <string name="main_label_master">I<sup><small>2</small></sup>C Master configuration</string>
+
+    <!-- Content description -->
+
+    <!-->Pass-Through<-->
+    <string name="pass_through">Pass-Through</string>
+    <string name="pt_direction">Direction: </string>
+    <string name="pt_direction_rf_i2c">Direction: RF -> I<sup><small>2</small></sup>C</string>
+    <string name="pt_direction_i2c_rf">Direction: I<sup><small>2</small></sup>C -> RF</string>
+    <string name="rf_i2c">RF -> I<sup><small>2</small></sup>C mode</string>
+    <string name="i2c_rf">I<sup><small>2</small></sup>C -> RF mode</string>
+
+    <!-->Configure PWM<-->
+    <string name="config_pwm">PWM use case</string>
+    <string name="direction">Resolution</string>
+    <string name="duty_cycle">Duty cycle</string>
+    <string name="start_time">Start time</string>
+    <string name="padConfiguration">Prescalar configuration</string>
+    <string name="pwm_frequency">PWM frequency: </string>
+
+    <!-->Configure GPIO<-->
+    <string name="config_gpio">GPIO use case</string>
+    <string name="gpio_direction_input">GPIO direction: Input</string>
+    <string name="gpio_direction_output">GPIO direction: Output</string>
+    <string name="gpio_slew_rate">Slew rate</string>
+    <string name="gpio_pad_config">PAD configuration</string>
+    <string name="gpio_input_check">Get input status</string>
+    <string name="gpio_output_clear">Clear GPIO output</string>
+
+    <!-->Master I2C channel<-->
+    <string name="i2c_master">I<sup><small>2</small></sup>C master channel</string>
+    <string name="data_read_title">Data retrieved from sensor: </string>
+    <string name="button_send_command">Send command</string>
+    <string name="title_useful_commands">Default commands</string>
+    <string name="write_commands_hint">Write your own command here…</string>
+    <string name="radio_default_cmd">Select a default command</string>
+    <string name="radio_custom_cmd">Write a custom command</string>
+    <string name="button_configure_sensor">Configure Sensor</string>
+    <string name="button_get_temp">Get\nTemperature</string>
+    <string name="button_get_acc_x">Get Accelerometer X-axis</string>
+    <string name="button_get_acc_y">Get Accelerometer Y-axis</string>
+    <string name="button_get_acc_z">Get Accelerometer Z-axis</string>
+
+    <!-->Active Load Modulation use case<-->
+    <string name="config_alm"> ALM use case </string>
+    <string name="button_read_config"> Read ALM configuration </string>
+    <string name="ALM_CONF_00"> ALM_CONF_00 </string>
+    <string name="ALM_CONF_01"> ALM_CONF_01 </string>
+    <string name="ALM_CONF_02"> ALM_CONF_02 </string>
+    <string name="ALM_CONF_03"> ALM_CONF_03 </string>
+    <string name="rx_res"> RX resistor value </string>
+    <string name="tx_res"> TX resistor value </string>
+    <string name="field_thresh"> Field detect threshold </string>
+    <string name="static_phase_offset"> Static phase offset </string>
+    <string name="enable_phase_shift"> Phase shift enabled </string>
+    <string name="enable_res"> Enable resistor </string>
+    <string name="clamp"> Active Clamp delay (in number of bits) </string>
+    <string name="damping"> Damping period (times 147.5 ns) </string>
+    <string name="pll_delay"> PLL track delay (in 3.39 MHz clock cycles) </string>
+    <string name="tuning_top"> Tuning Topology </string>
+
+    <!-- Action Bar -->
+    <string name="menu_setI2CSlave">Set I2C Slave mode</string>
+    <string name="menu_setI2CMaster">Set I2C Master mode</string>
+    <string name="menu_setGPIOPWM">Set GPIO/PWM mode</string>
+    <string name="menu_getUseCaseConfig">Get use case config</string>
+    <string name="title_tag_mode_change">Change tag mode</string>
+    <string name="message_tag_mode_change">Change tag mode</string>
+    <string name="tag_mode_change_yes">Yes</string>
+    <string name="tag_mode_change_no">No</string>
+
+    <!-- NFC Support -->
+    <string name="dialog_nfc_not_enabled_title">Turn on NFC</string>
+    <string name="dialog_nfc_not_enabled_msg">Please turn on NFC on your phone to read your card</string>
+    <string name="dialog_nfc_not_enabled_positive_btn">TURN ON</string>
+    <string name="dialog_nfc_not_enabled_negative_btn" tools:ignore="ButtonCase">CANCEL</string>
+
+    <!-- Tag Support -->
+    <string name="dialog_tag_not_supported_btn">Dismiss</string>
+    <string name="dialog_tag_not_supported_msg">Tag not supported, this application can only work
+        with ISO/IEC 15693 tags.</string>
+    <string name="dialog_tag_not_supported_title">Error</string>
+
+    <!-- App requires NFC to work, so devices without NFC will not be allowed -->
+    <string name="nfc_not_enabled">This app cannot operate without NFC</string>
+
+</resources>
