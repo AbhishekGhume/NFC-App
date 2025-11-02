@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences; // 1. ADD IMPORT
 import android.content.pm.PackageManager;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
@@ -21,7 +22,6 @@ import java.io.IOException;
 import nxp.activentag5i2c.R;
 import nxp.activentag5i2c.nfc.RFCommands;
 
-//BaseActivity only contains the NFC communication
 public class BaseActivity extends AppCompatActivity {
     private final String TAG = BaseActivity.class.getSimpleName();
     private static final int ENABLE_NFC_REQUEST_CODE = 0x11;
@@ -34,32 +34,35 @@ public class BaseActivity extends AppCompatActivity {
     private IntentFilter[] writeTagFilters;
     private String[][] mTechLists;
 
+    // 2. ADD COMMAND CONSTANTS FOR RE-AUTH
+    private static final byte[] cmd_getRandomNumber_base = {0x12, (byte) 0xB2, 0x04};
+    private static final byte CMD_SET_PASSWORD_base = (byte) 0xB3;
+    private static final byte PWD_IDENTIFIER_WRITE_base = 0x02;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         checkNFC();
-
         mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
         setNfcIntent();
     }
 
+    // ... (setNfcIntent, onActivityResult, checkNFC, onResume, onPause methods are unchanged) ...
+
+    // (setNfcIntent method is unchanged)
     private void setNfcIntent() {
-        // Create a generic PendingIntent that will be delivered to this activity. The NFC stack will fill
-        // in the intent with the details of the discovered tag before delivering it to this activity.
         mPendingIntent = PendingIntent.getActivity(this, 0, new Intent(
                 getApplicationContext(), getClass())
                 .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
-
-
         IntentFilter tagDetected = new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED);
         writeTagFilters = new IntentFilter[]{tagDetected};
-
         mTechLists = new String[][]{new String[]{
                 NfcV.class.getName()
         }};
     }
 
+    // (onActivityResult method is unchanged)
     @Override
     protected void onActivityResult(final int requestCode,
                                     final int resultCode, final Intent data) {
@@ -74,10 +77,7 @@ public class BaseActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * Check the availability of NFC and BLE interfaces and let the user enable them
-     * if not active during the activity creation
-     */
+    // (checkNFC method is unchanged)
     private void checkNFC() {
         if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_NFC)) {
             mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
@@ -109,6 +109,7 @@ public class BaseActivity extends AppCompatActivity {
         }
     }
 
+    // (onResume method is unchanged)
     @Override
     protected void onResume() {
         super.onResume();
@@ -117,6 +118,7 @@ public class BaseActivity extends AppCompatActivity {
         }
     }
 
+    // (onPause method is unchanged)
     @Override
     protected void onPause() {
         super.onPause();
@@ -126,6 +128,7 @@ public class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onNewIntent(final Intent intent) {
+        // 3. ADD super.onNewIntent()
         super.onNewIntent(intent);
 
         tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
@@ -133,18 +136,9 @@ public class BaseActivity extends AppCompatActivity {
 
         String[] techList = tag.getTechList();
 
-        //Check that the discovered tag is a vicinity tag
         if (techList[0].equals("android.nfc.tech.NfcV")) {
             byte[] tagUid = tag.getId();
-
             nfcvTag = NfcV.get(tag);
-
-            //ISO/IEC 15693 tags can be operated in two modes:
-            // Select mode and Addressed mode.
-            //To work in the select mode it is needed to send a SELECT
-            // command at the beginning of communic.
-            //In the address mode, the tag UID is sent within each command.
-            //This application works in SELECT MODE.
             byte[] select_command = RFCommands.cmd_select;
             System.arraycopy(tagUid, 0, select_command, 2, 8);
 
@@ -152,8 +146,18 @@ public class BaseActivity extends AppCompatActivity {
                 try {
                     nfcvTag.connect();
                     byte[] select_respo = nfcvTag.transceive(select_command);
-                    Log.d(TAG, "Select response: " +
-                            Utils.byteArrayToHex(select_respo));
+                    Log.d(TAG, "Select response: " + Utils.byteArrayToHex(select_respo));
+
+                    // 4. ADD THE RE-AUTHENTICATION CALL
+                    if (reAuthenticate()) {
+                        Log.d(TAG, "onNewIntent: Re-authentication successful.");
+                    } else {
+                        Log.w(TAG, "onNewIntent: Re-authentication failed or no password saved.");
+                        // We don't show a toast here, as it would be annoying.
+                        // If auth is needed, the command in PassThroughActivity will just fail.
+                    }
+                    // --- END OF ADDITION ---
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -162,14 +166,26 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     /**
-     * This method sends RF commands to the connected NFC-V tag,
-     * the command is included as parameter
-     * the operation will be useful in MainActivity to distinguish
-     * the operations in different fragments
-     *
-     * @param command
+     * This method sends RF commands to the connected NFC-V tag
      */
     byte[] sendCommand(byte[] command) {
+        // 5. ADD A NULL CHECK FOR nfcvTag
+        if (nfcvTag == null) {
+            Log.e(TAG, "sendCommand: nfcvTag is null. No tag connected.");
+            return null;
+        }
+
+        // 6. ADD CHECK FOR CONNECTION
+        if (!nfcvTag.isConnected()) {
+            Log.w(TAG, "sendCommand: Tag not connected. Attempting to reconnect...");
+            try {
+                nfcvTag.connect();
+            } catch (IOException e) {
+                Log.e(TAG, "sendCommand: Reconnect failed.", e);
+                return null; // Reconnect failed
+            }
+        }
+
         byte[] response;
         try {
             response = nfcvTag.transceive(command);
@@ -179,5 +195,71 @@ public class BaseActivity extends AppCompatActivity {
             response = null;
         }
         return response;
+    }
+
+    // 7. ADD THIS ENTIRE NEW METHOD
+    /**
+     * Attempts to re-authenticate the NFC session using a saved password.
+     * This is called every time a new tag is tapped.
+     * @return true if authentication was successful, false otherwise.
+     */
+    private boolean reAuthenticate() {
+        // 1. Get saved password
+        SharedPreferences prefs = getSharedPreferences("NFC_AUTH", MODE_PRIVATE);
+        String pwdHex = prefs.getString("password_hex", null);
+
+        if (pwdHex == null) {
+            Log.w(TAG, "reAuthenticate: No password saved. Cannot re-authenticate.");
+            return false; // No password saved
+        }
+
+        byte[] yourPwdBytes = Utils.hexToByteArray(pwdHex);
+        if (yourPwdBytes == null || yourPwdBytes.length != 4) {
+            Log.e(TAG, "reAuthenticate: Saved password is corrupt.");
+            return false;
+        }
+        Log.d(TAG, "reAuthenticate: Found password. Starting auth...");
+
+        // --- NFC Step 1: GET RANDOM NUMBER ---
+        byte[] response_RN = sendCommand(cmd_getRandomNumber_base);
+        byte[] randomNum;
+
+        if (response_RN != null && response_RN.length >= 3 && response_RN[0] == 0x00) {
+            randomNum = new byte[]{response_RN[1], response_RN[2]};
+            Log.d(TAG, "reAuthenticate: Got Random Number.");
+        } else {
+            Log.e(TAG, "reAuthenticate: GET RANDOM NUMBER failed.");
+            return false;
+        }
+
+        // --- NFC Step 2: Calculate XOR_Password ---
+        byte[] concatRn = {randomNum[0], randomNum[1], randomNum[0], randomNum[1]};
+        byte[] xorPassword = new byte[4];
+        for (int i = 0; i < 4; i++) {
+            xorPassword[i] = (byte) (yourPwdBytes[i] ^ concatRn[i]);
+        }
+        Log.d(TAG, "reAuthenticate: Calculated XOR Password.");
+
+        // --- NFC Step 3: SET PASSWORD ---
+        byte[] cmd_setPassword = {
+                0x12,
+                CMD_SET_PASSWORD_base,
+                0x04,
+                PWD_IDENTIFIER_WRITE_base,
+                xorPassword[0],
+                xorPassword[1],
+                xorPassword[2],
+                xorPassword[3]
+        };
+
+        byte[] response_SP = sendCommand(cmd_setPassword);
+
+        if (response_SP != null && response_SP.length >= 1 && response_SP[0] == 0x00) {
+            Log.d(TAG, "reAuthenticate: SET PASSWORD Success.");
+            return true; // SUCCESS
+        } else {
+            Log.e(TAG, "reAuthenticate: SET PASSWORD failed.");
+            return false; // Auth failed
+        }
     }
 }

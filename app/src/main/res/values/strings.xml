@@ -100,5 +100,6 @@
 
     <!-- App requires NFC to work, so devices without NFC will not be allowed -->
     <string name="nfc_not_enabled">This app cannot operate without NFC</string>
+    <string name="write">write</string>
 
 </resources>
