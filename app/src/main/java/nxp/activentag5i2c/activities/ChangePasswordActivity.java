@@ -41,16 +41,10 @@ public class ChangePasswordActivity extends BaseActionBarActivity {
 
         editTextOldPassword = findViewById(R.id.editText_old_password);
         editTextNewPassword = findViewById(R.id.editText_new_password);
-        buttonChangePassword = findViewById(R.id.button_change_password);
 
-        buttonChangePassword.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // This function is called when the tag is tapped (due to onNewIntent)
-                // We just prompt the user to tap
-                Toast.makeText(ChangePasswordActivity.this, "Please tap the tag to change password", Toast.LENGTH_SHORT).show();
-            }
-        });
+        // The button and its listener have been removed.
+        // We can also update the hint text to be more helpful.
+        editTextNewPassword.setHint("Enter New Password & Tap Tag");
     }
 
     @Override

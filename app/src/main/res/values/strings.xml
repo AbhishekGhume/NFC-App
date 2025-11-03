@@ -101,5 +101,12 @@
     <!-- App requires NFC to work, so devices without NFC will not be allowed -->
     <string name="nfc_not_enabled">This app cannot operate without NFC</string>
     <string name="write">write</string>
+    <string name="read">read</string>
+    <string name="read_sram">Read SRAM</string>
+    <string name="write_sram">Write SRAM</string>
+    <string name="write_service_settings">write service Settings</string>
+    <string name="read_service_settings">read service settings</string>
+    <string name="change_password">Change Password</string>
+    <string name="transfer_data_between_rf_and_i_c_interfaces">Transfer data between RF and I²C interfaces</string>
 
 </resources>

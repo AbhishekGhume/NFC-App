@@ -1,7 +1,7 @@
 package nxp.activentag5i2c.activities;
 
 import android.content.Intent;
-import android.content.SharedPreferences; // 1. ADD IMPORT
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
@@ -11,6 +11,10 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.mobileknowledge.library.utils.Utils;
+
+// 1. ADD THESE IMPORTS for the new password logic
+import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
 
 import nxp.activentag5i2c.R;
 
@@ -34,35 +38,46 @@ public class LoginActivity extends BaseActionBarActivity {
         }
 
         editTextPassword = findViewById(R.id.editText_password);
-        Button buttonLogin = findViewById(R.id.button_login);
 
-        buttonLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                validateCredentialsAndAuthenticateNFC();
-            }
-        });
+        // 3. (Optional) Update hint text to be more instructive
+        editTextPassword.setHint("Enter Password & Tap Tag");
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
+        super.onNewIntent(intent); // This connects the tag and calls BaseActivity's onNewIntent
         if (tag.getTechList()[0].equals("android.nfc.tech.NfcV")) {
+
+            // 4. CALL THE AUTHENTICATION LOGIC on NFC tap
+            Log.d(TAG, "NFC Tag Detected. Attempting login...");
+            validateCredentialsAndAuthenticateNFC();
+
+        } else {
+            // Handle non-NfcV tags if necessary
             Snackbar.make(findViewById(android.R.id.content),
-                    "NFC Tag Detected. Ready to Authenticate.", Toast.LENGTH_SHORT).show();
+                    "Tag not supported.", Toast.LENGTH_SHORT).show();
         }
     }
 
     public void validateCredentialsAndAuthenticateNFC() {
         String password = editTextPassword.getText().toString();
 
-        if (password.length() != 4) {
-            Toast.makeText(LoginActivity.this, "Password must be exactly 4 characters.", Toast.LENGTH_LONG).show();
+        // 5. USE NEW PASSWORD VALIDATION (1-32 chars)
+        if (password.isEmpty()) {
+            Toast.makeText(this, "Password cannot be empty", Toast.LENGTH_LONG).show();
+            return;
+        }
+        if (password.length() > 32) {
+            Toast.makeText(this, "Password cannot be more than 32 characters", Toast.LENGTH_LONG).show();
             return;
         }
 
-        // This is the password we will try to use
-        byte[] yourPwdBytes = password.getBytes();
+        // 6. GENERATE 4-BYTE KEY (same as ChangePasswordActivity)
+        byte[] yourPwdBytes = generateNfcKey(password);
+        if (yourPwdBytes == null) {
+            Toast.makeText(this, "Password encoding error", Toast.LENGTH_LONG).show();
+            return;
+        }
 
         // --- NFC Step 1: GET RANDOM NUMBER ---
         byte[] response_RN = sendCommand(cmd_getRandomNumber);
@@ -104,14 +119,13 @@ public class LoginActivity extends BaseActionBarActivity {
             Log.d(TAG, "NFC Step 3 Success. Response: 0x00");
             Toast.makeText(LoginActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show();
 
-            // --- 2. ADD THIS SECTION ---
-            // Save the *successful* password to SharedPreferences
+            // --- Save the successful 4-BYTE KEY to SharedPreferences ---
             SharedPreferences prefs = getSharedPreferences("NFC_AUTH", MODE_PRIVATE);
             SharedPreferences.Editor editor = prefs.edit();
-            // Save the password as a hex string so we can retrieve it easily
+            // Save the 4-byte key as a hex string
             editor.putString("password_hex", Utils.byteArrayToHex(yourPwdBytes));
             editor.apply();
-            Log.d(TAG, "Password saved to SharedPreferences.");
+            Log.d(TAG, "4-byte key saved to SharedPreferences.");
             // --- END OF ADDITION ---
 
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
@@ -122,6 +136,29 @@ public class LoginActivity extends BaseActionBarActivity {
             String errorHex = (response_SP != null) ? Utils.byteArrayToHex(response_SP) : "null";
             Log.e(TAG, "NFC Step 3 Failed. Response: 0x" + errorHex);
             Toast.makeText(this, "Invalid Password.", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    // 7. ADD THIS HELPER METHOD (copied from ChangePasswordActivity)
+    /**
+     * Converts a 1-32 character user password string into a 4-byte NFC key
+     * using the same XOR-fold logic from LoginActivity.
+     */
+    private byte[] generateNfcKey(String password) {
+        try {
+            byte[] inputBytes = password.getBytes("UTF-8");
+            byte[] paddedBytes = new byte[32];
+            Arrays.fill(paddedBytes, (byte) 0x00);
+            System.arraycopy(inputBytes, 0, paddedBytes, 0, inputBytes.length);
+
+            byte[] nfcKey = new byte[4];
+            for (int i = 0; i < 32; i++) {
+                nfcKey[i % 4] ^= paddedBytes[i];
+            }
+            return nfcKey;
+        } catch (UnsupportedEncodingException e) {
+            Log.e(TAG, "generateNfcKey: UTF-8 not supported", e);
+            return null;
         }
     }
 }

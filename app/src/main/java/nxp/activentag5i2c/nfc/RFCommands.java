@@ -141,7 +141,7 @@ public class RFCommands {
             (byte) 0x12,
             (byte) 0xD2,
             (byte) 0x04,
-            (byte) 0x01,
+            (byte) 0x00,
             (byte) 0x3F
     };
 
@@ -254,7 +254,7 @@ public class RFCommands {
             (byte) 0xD5, // READ I2C
             (byte) 0x04,
             (byte) 0x1F, //Don't generate Stop condition
-                         //I2C address = 0x1F
+            //I2C address = 0x1F
             (byte) 0x00
     };
 
@@ -263,7 +263,7 @@ public class RFCommands {
             (byte) 0xD4, // WRITE I2C
             (byte) 0x04,
             (byte) 0x9F, //Generate Stop condition
-                         //I2C address = Stop condition bit | 0x1F = 0x9F
+            //I2C address = Stop condition bit | 0x1F = 0x9F
             (byte) 0x00,
             (byte) 0x51  // Temperature register in combosensor
     };
