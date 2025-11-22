@@ -116,8 +116,6 @@ public class ToggleActivity extends BaseActionBarActivity {
     }
 
     private void updateButtonHighlight() {
-        // This is a simple way to show selection.
-        // You can use drawable selectors for a cleaner look.
         if (selectedValue.equals(option1Text)) {
             buttonOption1.getBackground().setColorFilter(Color.CYAN, PorterDuff.Mode.MULTIPLY);
             buttonOption2.getBackground().clearColorFilter();

@@ -119,7 +119,6 @@ public class ValueAdjustActivity extends BaseActionBarActivity {
                 editor.putInt(settingKey, currentValue);
                 editor.apply();
 
-                // Here you would also add your NFC logic to write the value to the tag
                 Toast.makeText(ValueAdjustActivity.this, "Value saved: " + currentValue, Toast.LENGTH_SHORT).show();
 
                 finish(); // Go back to the previous screen

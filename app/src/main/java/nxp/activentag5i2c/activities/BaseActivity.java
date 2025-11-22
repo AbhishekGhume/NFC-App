@@ -48,9 +48,7 @@ public class BaseActivity extends AppCompatActivity {
         setNfcIntent();
     }
 
-    // ... (setNfcIntent, onActivityResult, checkNFC, onResume, onPause methods are unchanged) ...
 
-    // (setNfcIntent method is unchanged)
     private void setNfcIntent() {
         mPendingIntent = PendingIntent.getActivity(this, 0, new Intent(
                 getApplicationContext(), getClass())
@@ -62,7 +60,6 @@ public class BaseActivity extends AppCompatActivity {
         }};
     }
 
-    // (onActivityResult method is unchanged)
     @Override
     protected void onActivityResult(final int requestCode,
                                     final int resultCode, final Intent data) {
@@ -77,7 +74,6 @@ public class BaseActivity extends AppCompatActivity {
         }
     }
 
-    // (checkNFC method is unchanged)
     private void checkNFC() {
         if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_NFC)) {
             mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
@@ -128,7 +124,7 @@ public class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onNewIntent(final Intent intent) {
-        // 3. ADD super.onNewIntent()
+        // 3. super.onNewIntent()
         super.onNewIntent(intent);
 
         tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
@@ -148,7 +144,7 @@ public class BaseActivity extends AppCompatActivity {
                     byte[] select_respo = nfcvTag.transceive(select_command);
                     Log.d(TAG, "Select response: " + Utils.byteArrayToHex(select_respo));
 
-                    // 4. ADD THE RE-AUTHENTICATION CALL
+                    // 4. THE RE-AUTHENTICATION CALL
                     if (reAuthenticate()) {
                         Log.d(TAG, "onNewIntent: Re-authentication successful.");
                     } else {
@@ -156,7 +152,6 @@ public class BaseActivity extends AppCompatActivity {
                         // We don't show a toast here, as it would be annoying.
                         // If auth is needed, the command in PassThroughActivity will just fail.
                     }
-                    // --- END OF ADDITION ---
 
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -197,7 +192,6 @@ public class BaseActivity extends AppCompatActivity {
         return response;
     }
 
-    // 7. ADD THIS ENTIRE NEW METHOD
     /**
      * Attempts to re-authenticate the NFC session using a saved password.
      * This is called every time a new tag is tapped.

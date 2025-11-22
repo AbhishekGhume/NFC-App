@@ -10,7 +10,6 @@ import com.mobileknowledge.library.utils.Utils;
 
 import nxp.activentag5i2c.R;
 
-// 1. ADD cmd_readSRAM import
 import static nxp.activentag5i2c.nfc.RFCommands.cmd_readSRAM;
 import static nxp.activentag5i2c.utils.Constants.TOAST_LENGTH;
 
@@ -20,24 +19,20 @@ public class ReadSramActivity extends MainActivity {
     private TextView textLog;
     private TextView textDirection;
 
-    // 2. ADD variable for the output TextView
     private TextView textReadSRAM;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // 3. SET new layout file
         setContentView(R.layout.activity_read_sram);
 
         LinearLayout linearLayoutLog = findViewById(R.id.linearLayoutLog);
         textLog = linearLayoutLog.findViewById(R.id.textLog);
         textDirection = findViewById(R.id.textDirection);
 
-        // 4. FIND new TextView
         textReadSRAM = findViewById(R.id.textReadSRAM);
     }
 
-    // 5. CATCH NFC tap
     @Override
     protected void onNewIntent(android.content.Intent intent) {
         super.onNewIntent(intent); // Connects the tag from BaseActivity
@@ -52,18 +47,15 @@ public class ReadSramActivity extends MainActivity {
         }
     }
 
-    // 7. CREATE startSramRead() method
     private void startSramRead() {
         new SRAMReadTask().execute();
         Snackbar.make(findViewById(android.R.id.content), "NFC Tag Detected. Starting read...", Snackbar.LENGTH_SHORT).show();
     }
 
-    // 8. NO onPause() override is needed
 
     /**
      * AsyncTask for SRAM read operation (I²C → RF)
      */
-    // 9. CREATE SRAMReadTask
     private class SRAMReadTask extends AsyncTask<Void, Void, byte[]> {
 
         byte[] responseReadSRAM;
@@ -84,7 +76,6 @@ public class ReadSramActivity extends MainActivity {
 
         @Override
         protected void onProgressUpdate(Void... values) {
-            // 11. UPDATE direction text
             textDirection.setText(getResources().getString(R.string.pt_direction_i2c_rf));
         }
 
@@ -96,7 +87,7 @@ public class ReadSramActivity extends MainActivity {
                 writeReceiveLog(result);    // Log the response
                 textLog.setText(logTextPassThrough.toString());
 
-                // 12. Process and display the data
+                // Process and display the data
                 // The actual data starts from the second byte (index 1)
                 int dataLength = result.length - 1;
                 byte[] data = new byte[dataLength];
@@ -148,7 +139,7 @@ public class ReadSramActivity extends MainActivity {
         }
     }
 
-    // 13. ADD logging functions (copied from PassThroughActivity)
+    // logging functions (copied from PassThroughActivity)
     private void writeSendLog(byte[] command) {
         logTextPassThrough = new StringBuilder();
         logTextPassThrough.append("NFC -> ").append(Utils.byteArrayToHex(command));

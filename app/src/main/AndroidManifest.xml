@@ -68,6 +68,7 @@
         <activity android:name=".activities.SettingsActivity" />
         <activity android:name=".activities.ValueAdjustActivity" />
         <activity android:name=".activities.ToggleActivity" />
+        <activity android:name=".activities.ReadNFCSettingsActivity" />
 
 
     </application>

@@ -7,8 +7,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-// 1. REMOVE ToggleButton import
-// import android.widget.ToggleButton;
 
 import com.mobileknowledge.library.utils.Utils;
 
@@ -33,8 +31,6 @@ public class PassThroughActivity extends MainActivity {
     private TextView textDirection;
     private TextView textWriteSRAM;
     private EditText editWriteSRAMInput;
-    // 2. REMOVE button variable
-    // private ToggleButton buttonStartDemo;
 
     private boolean stopLoop;
 
@@ -53,7 +49,7 @@ public class PassThroughActivity extends MainActivity {
 
     }
 
-    // 5. ADD onNewIntent method to trigger the write task
+    // onNewIntent method to trigger the write task
     @Override
     protected void onNewIntent(android.content.Intent intent) {
         super.onNewIntent(intent); // Connects the tag from BaseActivity
@@ -68,7 +64,7 @@ public class PassThroughActivity extends MainActivity {
         }
     }
 
-    // 6. CREATE startSramWrite() method from the button's old logic
+    // CREATE startSramWrite() method from the button's old logic
     private void startSramWrite() {
         // Convert user text into bytes
         String input = editWriteSRAMInput.getText().toString().trim();

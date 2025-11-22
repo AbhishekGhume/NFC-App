@@ -15,7 +15,6 @@ public class MachineMenuActivity extends BaseActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_machine_menu);
 
-        // You can set a title if you want
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle("Machine Menu");
         }
@@ -29,7 +28,7 @@ public class MachineMenuActivity extends BaseActionBarActivity {
         buttonMachineSetup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MachineMenuActivity.this, SettingsActivity.class);
+                Intent intent = new Intent(MachineMenuActivity.this, ReadNFCSettingsActivity.class);
                 startActivity(intent);
             }
         });

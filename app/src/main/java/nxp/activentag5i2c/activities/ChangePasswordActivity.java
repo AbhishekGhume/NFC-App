@@ -42,8 +42,6 @@ public class ChangePasswordActivity extends BaseActionBarActivity {
         editTextOldPassword = findViewById(R.id.editText_old_password);
         editTextNewPassword = findViewById(R.id.editText_new_password);
 
-        // The button and its listener have been removed.
-        // We can also update the hint text to be more helpful.
         editTextNewPassword.setHint("Enter New Password & Tap Tag");
     }
 

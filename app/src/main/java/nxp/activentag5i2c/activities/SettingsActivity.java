@@ -3,12 +3,15 @@ package nxp.activentag5i2c.activities;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.mobileknowledge.library.utils.Utils;
 
 import nxp.activentag5i2c.R;
 
@@ -190,26 +193,115 @@ public class SettingsActivity extends BaseActionBarActivity {
         });
     }
 
-    // You can add your onNewIntent logic here to write all settings
-    // to the NFC tag when it is tapped.
+//    @Override
+//    protected void onNewIntent(android.content.Intent intent) {
+//        super.onNewIntent(intent); // This will connect and call reAuthenticate() from BaseActivity
+//        if (tag.getTechList()[0].equals("android.nfc.tech.NfcV")) {
+//            // A tag has been tapped!
+//            // This is where you would get all values from SharedPreferences
+//            // and write them to the tag using sendCommand()
+//
+//            // Example:
+//            int currentWashTime = prefs.getInt("wash_time_value", 0);
+//            int currentSpinSpeed = prefs.getInt("spin_speed_value", 700);
+//            String currentTempUnit = prefs.getString("temp_unit_value", "C");
+//
+//            // ... build your NFC command byte array ...
+//            // byte[] writeSettingsCommand = ...
+//            // sendCommand(writeSettingsCommand);
+//
+//            Toast.makeText(this, "NFC Tag Detected. Writing settings...", Toast.LENGTH_SHORT).show();
+//        }
+//    }
+
+    /**
+     * Build command to write all 5 settings to tag (20 bytes at Block 0)
+     */
+//    private byte[] buildWriteSettingsCommand(int washTime, int rinseTime, int spinSpeed,
+//                                             String extraRinse, String tempUnit) {
+//        byte[] cmd = new byte[25]; // 5 header + 20 data
+//
+//        cmd[0] = (byte) 0x02;  // FLAGS
+//        cmd[1] = (byte) 0xD3;  // WRITE I2C command
+//        cmd[2] = (byte) 0x04;
+//        cmd[3] = (byte) 0x00;  // Starting block address (Block 0)
+//        cmd[4] = (byte) 0x14;  // Length: 20 bytes (5 blocks)
+//
+//        // Block 0: Wash Time
+//        cmd[5] = (byte) (washTime & 0xFF);
+//        cmd[6] = 0x00;
+//        cmd[7] = 0x00;
+//        cmd[8] = 0x00;
+//
+//        // Block 1: Rinse Time
+//        cmd[9] = (byte) (rinseTime & 0xFF);
+//        cmd[10] = 0x00;
+//        cmd[11] = 0x00;
+//        cmd[12] = 0x00;
+//
+//        // Block 2: Spin Speed (Little Endian)
+//        cmd[13] = (byte) (spinSpeed & 0xFF);
+//        cmd[14] = (byte) ((spinSpeed >> 8) & 0xFF);
+//        cmd[15] = 0x00;
+//        cmd[16] = 0x00;
+//
+//        // Block 3: Extra Rinse (0 = off, 1 = on)
+//        cmd[17] = (byte) (extraRinse.equals("on") ? 1 : 0);
+//        cmd[18] = 0x00;
+//        cmd[19] = 0x00;
+//        cmd[20] = 0x00;
+//
+//        // Block 4: Temperature Unit (0 = C, 1 = F)
+//        cmd[21] = (byte) (tempUnit.equals("F") ? 1 : 0);
+//        cmd[22] = 0x00;
+//        cmd[23] = 0x00;
+//        cmd[24] = 0x00;
+//
+//        return cmd;
+//    }
+//
+//    /**
+//     * Write settings to NFC tag when user taps tag in SettingsActivity
+//     */
+//    private void writeSettingsToTag() {
+//        try {
+//            int washTime = prefs.getInt("wash_time_value", 0);
+//            int rinseTime = prefs.getInt("rinse_time_value", 0);
+//            int spinSpeed = prefs.getInt("spin_speed_value", 700);
+//            String extraRinse = prefs.getString("extra_rinse_value", "off");
+//            String tempUnit = prefs.getString("temp_unit_value", "C");
+//
+//            byte[] writeCmd = buildWriteSettingsCommand(washTime, rinseTime, spinSpeed,
+//                    extraRinse, tempUnit);
+//            byte[] response = sendCommand(writeCmd);
+//
+//            if (response != null && response.length >= 1 && response[0] == 0x00) {
+//                Toast.makeText(this, "Settings written to tag successfully!", Toast.LENGTH_SHORT).show();
+////                Log.d(TAG, "Settings written to tag successfully");
+//            } else {
+//                String errorMsg = (response != null) ? Utils.byteArrayToHex(response) : "null";
+////                Log.e(TAG, "Write failed. Response: " + errorMsg);
+//                Toast.makeText(this, "Failed to write settings to tag", Toast.LENGTH_LONG).show();
+//            }
+//        } catch (Exception e) {
+////            Log.e(TAG, "Error writing settings", e);
+//            Toast.makeText(this, "Error writing settings: " + e.getMessage(), Toast.LENGTH_LONG).show();
+//        }
+//    }
+
     @Override
-    protected void onNewIntent(android.content.Intent intent) {
-        super.onNewIntent(intent); // This will connect and call reAuthenticate() from BaseActivity
-        if (tag.getTechList()[0].equals("android.nfc.tech.NfcV")) {
-            // A tag has been tapped!
-            // This is where you would get all values from SharedPreferences
-            // and write them to the tag using sendCommand()
+    protected void onResume() {
+        super.onResume();
 
-            // Example:
-            int currentWashTime = prefs.getInt("wash_time_value", 0);
-            int currentSpinSpeed = prefs.getInt("spin_speed_value", 700);
-            String currentTempUnit = prefs.getString("temp_unit_value", "C");
+        // Show toast if settings were just loaded from NFC
+        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        boolean justLoaded = prefs.getBoolean("settings_just_loaded", false);
 
-            // ... build your NFC command byte array ...
-            // byte[] writeSettingsCommand = ...
-            // sendCommand(writeSettingsCommand);
-
-            Toast.makeText(this, "NFC Tag Detected. Writing settings...", Toast.LENGTH_SHORT).show();
+        if (justLoaded) {
+            Toast.makeText(this, "Settings loaded from NFC tag", Toast.LENGTH_SHORT).show();
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putBoolean("settings_just_loaded", false);
+            editor.apply();
         }
     }
 }

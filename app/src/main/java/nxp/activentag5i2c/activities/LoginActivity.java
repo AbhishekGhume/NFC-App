@@ -39,7 +39,7 @@ public class LoginActivity extends BaseActionBarActivity {
 
         editTextPassword = findViewById(R.id.editText_password);
 
-        // 3. (Optional) Update hint text to be more instructive
+        // 3. Update hint text to be more instructive
         editTextPassword.setHint("Enter Password & Tap Tag");
     }
 
@@ -126,7 +126,6 @@ public class LoginActivity extends BaseActionBarActivity {
             editor.putString("password_hex", Utils.byteArrayToHex(yourPwdBytes));
             editor.apply();
             Log.d(TAG, "4-byte key saved to SharedPreferences.");
-            // --- END OF ADDITION ---
 
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(intent);
@@ -139,7 +138,6 @@ public class LoginActivity extends BaseActionBarActivity {
         }
     }
 
-    // 7. ADD THIS HELPER METHOD (copied from ChangePasswordActivity)
     /**
      * Converts a 1-32 character user password string into a 4-byte NFC key
      * using the same XOR-fold logic from LoginActivity.
