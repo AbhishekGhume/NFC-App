@@ -85,11 +85,12 @@ public class MainActivity extends BaseActionBarActivity{
             }
         });
 
-        Button buttonChangePassword = findViewById(R.id.button_change_password);
-        buttonChangePassword.setOnClickListener(new View.OnClickListener() {
+        Button buttonNfcMenu = findViewById(R.id.button_nfc_menu);
+        buttonNfcMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, ChangePasswordActivity.class);
+                // Launch the new Machine Menu screen
+                Intent intent = new Intent(MainActivity.this, MachineMenuActivity.class);
                 MainActivity.this.startActivity(intent);
             }
         });

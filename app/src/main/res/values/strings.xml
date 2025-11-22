@@ -108,5 +108,9 @@
     <string name="read_service_settings">read service settings</string>
     <string name="change_password">Change Password</string>
     <string name="transfer_data_between_rf_and_i_c_interfaces">Transfer data between RF and I²C interfaces</string>
+    <string name="service_menu">Service Menu</string>
+    <string name="vend_setup">Vend Setup</string>
+    <string name="machine_setup">Machine Setup</string>
+    <string name="machine_info">Machine Info</string>
 
 </resources>

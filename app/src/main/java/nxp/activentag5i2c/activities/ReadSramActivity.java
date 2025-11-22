@@ -71,7 +71,6 @@ public class ReadSramActivity extends MainActivity {
         @Override
         protected byte[] doInBackground(Void... params) {
             try {
-                // 10. SEND the cmd_readSRAM command
                 responseReadSRAM = sendCommand(cmd_readSRAM);
                 publishProgress(); // For updating direction
                 return responseReadSRAM;

@@ -137,6 +137,7 @@ public class PassThroughActivity extends MainActivity {
                     // Bit 2 means I²C not accessing SRAM (safe to write)
                     if (Parser.IsBitSet(responseTagStatus[1], 2)) {
                         if (!Parser.IsBitSet(responseTagStatus[1], 5)) {
+                            // Save the response to the class variable
                             responseWriteSRAM = sendCommand(finalCommandWriteSRAM);
                             publishProgress();
                             writeCounter++;
@@ -145,7 +146,6 @@ public class PassThroughActivity extends MainActivity {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                // 7. Use findViewById(android.R.id.content) for Snackbar in AsyncTask
                 Snackbar.make(findViewById(android.R.id.content),
                         "Write operation interrupted! Try again.", TOAST_LENGTH).show();
                 return false;
@@ -161,9 +161,23 @@ public class PassThroughActivity extends MainActivity {
         @Override
         protected void onPostExecute(Boolean result) {
             if (result) {
-                writeSendLog(finalCommandWriteSRAM);
-                writeReceiveLog(responseWriteSRAM);
+                // Generate Hex Strings for display
+                String commandHex = Utils.byteArrayToHex(finalCommandWriteSRAM);
+                String responseHex = (responseWriteSRAM != null)
+                        ? Utils.byteArrayToHex(responseWriteSRAM)
+                        : "No Response";
+
+                // Build the log message
+                logTextPassThrough = new StringBuilder();
+                logTextPassThrough.append("--- WRITE SUCCESS ---").append("\n");
+                logTextPassThrough.append("CMD (Sent): ").append(commandHex).append("\n");
+                logTextPassThrough.append("RSP (Recv): ").append(responseHex).append("\n");
+
+                // Update the TextView on screen
                 textLog.setText(logTextPassThrough.toString());
+
+                // Keep your existing file logging if needed
+                writeLogFile("GPIO-Logs", logTextPassThrough.toString());
             }
         }
     }

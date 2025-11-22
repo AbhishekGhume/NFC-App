@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <TextView android:id="@+id/textView" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="toggle_button_unchecked.xml" />
+    <item android:state_checked="true" android:drawable="@drawable/toggle_button_checked" />
+    <item android:state_checked="false" android:drawable="@drawable/toggle_button_unchecked" />
+</selector>

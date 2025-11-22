@@ -13,7 +13,7 @@ public class Constants {
         RF_I2C, I2C_RF
     }
 
-    public static final int SRAM_WRITE_SIZE = 240;
+    public static final int SRAM_WRITE_SIZE = 4;
     public static final int SRAM_READ_SIZE = 252;
     public static int SRAM_LOOP_SIZE = 2;
 
