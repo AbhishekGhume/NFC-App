@@ -8,261 +8,286 @@
     android:paddingRight="20dp"
     tools:context=".activities.SettingsActivity">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_centerInParent="true"
-        android:gravity="center_horizontal">
-
-        <ImageView
-            android:id="@+id/imageViewLogo"
-            android:layout_width="195dp"
-            android:layout_height="107dp"
-            app:srcCompat="@drawable/whirlpool_logo"
-            android:contentDescription="Whirlpool Logo" />
-
-        <TextView
-            android:id="@+id/textViewAppName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:layout_marginBottom="32dp"
-            android:text="Machine Setup"
-            android:textColor="#000000"
-            android:textSize="28sp"
-            android:textStyle="bold" />
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:background="@drawable/control_background"
-            android:padding="16dp"
-            android:gravity="center_vertical"
-            android:layout_marginBottom="16dp">
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
+
+            <ImageView
+                android:id="@+id/imageViewLogo"
+                android:layout_width="195dp"
+                android:layout_height="107dp"
+                app:srcCompat="@drawable/whirlpool_logo"
+                android:contentDescription="Whirlpool Logo" />
 
             <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Wash Time"
-                android:textSize="18sp"
-                android:textColor="#000000" />
-
-            <Button
-                android:id="@+id/btn_wash_minus"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:text="-" />
-
-            <TextView
-                android:id="@+id/text_wash_value"
+                android:id="@+id/textViewAppName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="0"
-                android:textSize="18sp"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="32dp"
+                android:text="Machine Setup"
                 android:textColor="#000000"
-                android:textStyle="bold"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"/>
+                android:textSize="28sp"
+                android:textStyle="bold" />
 
-            <Button
-                android:id="@+id/btn_wash_plus"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:text="+" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:background="@drawable/control_background"
-            android:padding="16dp"
-            android:gravity="center_vertical"
-            android:layout_marginBottom="16dp">
-
-            <TextView
-                android:layout_width="0dp"
+            <!-- Wash Time Control -->
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Rinse Time"
-                android:textSize="18sp"
-                android:textColor="#000000" />
+                android:orientation="horizontal"
+                android:background="@drawable/control_background"
+                android:padding="16dp"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="16dp">
 
-            <Button
-                android:id="@+id/btn_rinse_minus"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:text="-" />
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Wash Time"
+                    android:textSize="18sp"
+                    android:textColor="#000000" />
 
-            <TextView
-                android:id="@+id/text_rinse_value"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="0"
-                android:textSize="18sp"
-                android:textColor="#000000"
-                android:textStyle="bold"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"/>
-
-            <Button
-                android:id="@+id/btn_rinse_plus"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:text="+" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:background="@drawable/control_background"
-            android:padding="16dp"
-            android:gravity="center_vertical"
-            android:layout_marginBottom="16dp">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Spin Speed"
-                android:textSize="18sp"
-                android:textColor="#000000" />
-
-            <Button
-                android:id="@+id/btn_spin_minus"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:text="-" />
-
-            <TextView
-                android:id="@+id/text_spin_value"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="700"
-                android:textSize="18sp"
-                android:textColor="#000000"
-                android:textStyle="bold"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"/>
-
-            <Button
-                android:id="@+id/btn_spin_plus"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:text="+" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:background="@drawable/control_background"
-            android:padding="16dp"
-            android:gravity="center_vertical"
-            android:layout_marginBottom="16dp">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Extra Rinse"
-                android:textSize="18sp"
-                android:textColor="#000000" />
-
-            <RadioGroup
-                android:id="@+id/rg_extra_rinse"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <RadioButton
-                    android:id="@+id/rb_rinse_on"
-                    android:layout_width="80dp"
+                <Button
+                    android:id="@+id/btn_wash_minus"
+                    android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:background="@drawable/toggle_button_selector"
-                    android:button="@null"
-                    android:gravity="center"
-                    android:text="On"
-                    android:textColor="#FFFFFF"
-                    android:textStyle="bold" />
+                    android:text="-" />
 
-                <RadioButton
-                    android:id="@+id/rb_rinse_off"
-                    android:layout_width="80dp"
+                <TextView
+                    android:id="@+id/text_wash_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textSize="18sp"
+                    android:textColor="#000000"
+                    android:textStyle="bold"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"/>
+
+                <Button
+                    android:id="@+id/btn_wash_plus"
+                    android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:layout_marginStart="10dp"
-                    android:background="@drawable/toggle_button_selector"
-                    android:button="@null"
-                    android:gravity="center"
-                    android:text="Off"
-                    android:textColor="#FFFFFF"
-                    android:textStyle="bold" />
-            </RadioGroup>
-        </LinearLayout>
+                    android:text="+" />
+            </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:background="@drawable/control_background"
-            android:padding="16dp"
-            android:gravity="center_vertical"
-            android:layout_marginBottom="16dp">
+            <!-- Rinse Time Control -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:background="@drawable/control_background"
+                android:padding="16dp"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="16dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Rinse Time"
+                    android:textSize="18sp"
+                    android:textColor="#000000" />
+
+                <Button
+                    android:id="@+id/btn_rinse_minus"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:text="-" />
+
+                <TextView
+                    android:id="@+id/text_rinse_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textSize="18sp"
+                    android:textColor="#000000"
+                    android:textStyle="bold"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"/>
+
+                <Button
+                    android:id="@+id/btn_rinse_plus"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:text="+" />
+            </LinearLayout>
+
+            <!-- Spin Speed Control -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:background="@drawable/control_background"
+                android:padding="16dp"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="16dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Spin Speed"
+                    android:textSize="18sp"
+                    android:textColor="#000000" />
+
+                <Button
+                    android:id="@+id/btn_spin_minus"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:text="-" />
+
+                <TextView
+                    android:id="@+id/text_spin_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="700"
+                    android:textSize="18sp"
+                    android:textColor="#000000"
+                    android:textStyle="bold"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"/>
+
+                <Button
+                    android:id="@+id/btn_spin_plus"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:text="+" />
+            </LinearLayout>
+
+            <!-- Extra Rinse Toggle -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:background="@drawable/control_background"
+                android:padding="16dp"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="16dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Extra Rinse"
+                    android:textSize="18sp"
+                    android:textColor="#000000" />
+
+                <RadioGroup
+                    android:id="@+id/rg_extra_rinse"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/rb_rinse_on"
+                        android:layout_width="80dp"
+                        android:layout_height="40dp"
+                        android:background="@drawable/toggle_button_selector"
+                        android:button="@null"
+                        android:gravity="center"
+                        android:text="On"
+                        android:textColor="#FFFFFF"
+                        android:textStyle="bold" />
+
+                    <RadioButton
+                        android:id="@+id/rb_rinse_off"
+                        android:layout_width="80dp"
+                        android:layout_height="40dp"
+                        android:layout_marginStart="10dp"
+                        android:background="@drawable/toggle_button_selector"
+                        android:button="@null"
+                        android:gravity="center"
+                        android:text="Off"
+                        android:textColor="#FFFFFF"
+                        android:textStyle="bold" />
+                </RadioGroup>
+            </LinearLayout>
+
+            <!-- Temperature Unit Toggle -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:background="@drawable/control_background"
+                android:padding="16dp"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="16dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Temp Unit"
+                    android:textSize="18sp"
+                    android:textColor="#000000" />
+
+                <RadioGroup
+                    android:id="@+id/rg_temp_unit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/rb_temp_c"
+                        android:layout_width="80dp"
+                        android:layout_height="40dp"
+                        android:background="@drawable/toggle_button_selector"
+                        android:button="@null"
+                        android:gravity="center"
+                        android:text="C"
+                        android:textColor="#FFFFFF"
+                        android:textStyle="bold" />
+
+                    <RadioButton
+                        android:id="@+id/rb_temp_f"
+                        android:layout_width="80dp"
+                        android:layout_height="40dp"
+                        android:layout_marginStart="10dp"
+                        android:background="@drawable/toggle_button_selector"
+                        android:button="@null"
+                        android:gravity="center"
+                        android:text="F"
+                        android:textColor="#FFFFFF"
+                        android:textStyle="bold" />
+                </RadioGroup>
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/button_change_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:padding="20dp"
+                android:background="@drawable/button_shape"
+                android:text="change password"
+                android:textSize="18sp"
+                android:textColor="#FFFFFF" />
 
             <TextView
-                android:layout_width="0dp"
+                android:id="@+id/text_nfc_instruction"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Temp Unit"
-                android:textSize="18sp"
-                android:textColor="#000000" />
+                android:layout_marginTop="32dp"
+                android:layout_marginBottom="32dp"
+                android:text="💡 Tap your NFC tag to save these settings to the machine"
+                android:textSize="16sp"
+                android:textColor="#1E3F82"
+                android:textStyle="italic"
+                android:gravity="center"
+                android:padding="16dp"
+                android:background="@drawable/control_background" />
 
-            <RadioGroup
-                android:id="@+id/rg_temp_unit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <RadioButton
-                    android:id="@+id/rb_temp_c"
-                    android:layout_width="80dp"
-                    android:layout_height="40dp"
-                    android:background="@drawable/toggle_button_selector"
-                    android:button="@null"
-                    android:gravity="center"
-                    android:text="C"
-                    android:textColor="#FFFFFF"
-                    android:textStyle="bold" />
-
-                <RadioButton
-                    android:id="@+id/rb_temp_f"
-                    android:layout_width="80dp"
-                    android:layout_height="40dp"
-                    android:layout_marginStart="10dp"
-                    android:background="@drawable/toggle_button_selector"
-                    android:button="@null"
-                    android:gravity="center"
-                    android:text="F"
-                    android:textColor="#FFFFFF"
-                    android:textStyle="bold" />
-            </RadioGroup>
         </LinearLayout>
 
-        <Button
-            android:id="@+id/button_change_password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:padding="20dp"
-            android:background="@drawable/button_shape"
-            android:text="change password"
-            android:textSize="18sp"
-            android:textColor="#FFFFFF" />
-
-    </LinearLayout>
+    </ScrollView>
 
 </RelativeLayout>

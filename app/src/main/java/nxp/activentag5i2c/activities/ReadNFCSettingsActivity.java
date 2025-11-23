@@ -134,6 +134,7 @@ public class ReadNFCSettingsActivity extends BaseActionBarActivity {
             editor.putInt("spin_speed_value", spinSpeed);
             editor.putString("extra_rinse_value", extraRinse);
             editor.putString("temp_unit_value", tempUnit);
+            editor.putBoolean("settings_just_loaded", true);
             editor.apply();
 
             Log.d(TAG, "Settings saved - Wash: " + washTime + ", Rinse: " + rinseTime +
