@@ -15,7 +15,7 @@ public class Constants {
 
     public static final int SRAM_WRITE_SIZE = 4;
     public static final int SRAM_READ_SIZE = 252;
-    public static int SRAM_LOOP_SIZE = 2;
+    public static int SRAM_LOOP_SIZE = 1;
 
     // Toast length
     public static final int TOAST_LENGTH = 6000;

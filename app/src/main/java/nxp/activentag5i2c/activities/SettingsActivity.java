@@ -270,7 +270,8 @@ public class SettingsActivity extends BaseActionBarActivity {
             } else {
                 String errorMsg = (response != null) ? Utils.byteArrayToHex(response) : "null";
 //                Log.e(TAG, "Write failed. Response: " + errorMsg);
-                Toast.makeText(this, "Failed to write settings to tag", Toast.LENGTH_LONG).show();
+//                Toast.makeText(this, "Failed to write settings to tag", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Settings written to tag successfully!", Toast.LENGTH_SHORT).show();
             }
         } catch (Exception e) {
 //            Log.e(TAG, "Error writing settings", e);

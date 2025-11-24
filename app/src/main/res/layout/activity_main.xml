@@ -15,29 +15,29 @@
         android:paddingTop="20dp"
         android:gravity="center">
 
-        <Button
-            android:id="@+id/button_passthrough"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:padding="20dp"
-            android:background="@drawable/button_shape"
-            android:text="@string/write_service_settings"
-            android:textSize="18sp"
-            android:textColor="#FFFFFF"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+        <!--        <Button-->
+        <!--            android:id="@+id/button_passthrough"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_marginTop="30dp"-->
+        <!--            android:padding="20dp"-->
+        <!--            android:background="@drawable/button_shape"-->
+        <!--            android:text="@string/write_service_settings"-->
+        <!--            android:textSize="18sp"-->
+        <!--            android:textColor="#FFFFFF"-->
+        <!--            app:layout_constraintEnd_toEndOf="parent"-->
+        <!--            app:layout_constraintStart_toStartOf="parent" />-->
 
-        <Button
-            android:id="@+id/button_read_sram"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:padding="20dp"
-            android:background="@drawable/button_shape"
-            android:text="@string/read_service_settings"
-            android:textSize="18sp"
-            android:textColor="#FFFFFF" />
+        <!--        <Button-->
+        <!--            android:id="@+id/button_read_sram"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_marginTop="16dp"-->
+        <!--            android:padding="20dp"-->
+        <!--            android:background="@drawable/button_shape"-->
+        <!--            android:text="@string/read_service_settings"-->
+        <!--            android:textSize="18sp"-->
+        <!--            android:textColor="#FFFFFF" />-->
 
         <Button
             android:id="@+id/button_nfc_menu"

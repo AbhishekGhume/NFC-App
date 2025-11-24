@@ -67,23 +67,23 @@ public class MainActivity extends BaseActionBarActivity{
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         // Only Pass-Through button
-        Button buttonPassThrough = findViewById(R.id.button_passthrough);
-        buttonPassThrough.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, PassThroughActivity.class);
-                MainActivity.this.startActivity(intent);
-            }
-        });
-
-        Button buttonReadSram = findViewById(R.id.button_read_sram);
-        buttonReadSram.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, ReadSramActivity.class);
-                MainActivity.this.startActivity(intent);
-            }
-        });
+//        Button buttonPassThrough = findViewById(R.id.button_passthrough);
+//        buttonPassThrough.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent intent = new Intent(MainActivity.this, PassThroughActivity.class);
+//                MainActivity.this.startActivity(intent);
+//            }
+//        });
+//
+//        Button buttonReadSram = findViewById(R.id.button_read_sram);
+//        buttonReadSram.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(MainActivity.this, ReadSramActivity.class);
+//                MainActivity.this.startActivity(intent);
+//            }
+//        });
 
         Button buttonNfcMenu = findViewById(R.id.button_nfc_menu);
         buttonNfcMenu.setOnClickListener(new View.OnClickListener() {
