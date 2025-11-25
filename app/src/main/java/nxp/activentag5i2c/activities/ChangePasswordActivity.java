@@ -15,6 +15,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 
 import nxp.activentag5i2c.R;
+import nxp.activentag5i2c.utils.SuccessDialogUtil;
 
 public class ChangePasswordActivity extends BaseActionBarActivity {
 
@@ -140,7 +141,9 @@ public class ChangePasswordActivity extends BaseActionBarActivity {
 
             if (response_WP != null && response_WP.length >= 1 && response_WP[0] == 0x00) {
                 Log.d(TAG, "NFC Step 3 (Write) Success.");
-                Toast.makeText(this, "Password Changed Successfully!", Toast.LENGTH_SHORT).show();
+
+                // Show beautiful success dialog instead of Toast
+                SuccessDialogUtil.showSuccessDialog(this, "Password Changed\nSuccessfully");
 
                 // --- 5. UPDATE SharedPreferences with BOTH the hex key AND plain password ---
                 SharedPreferences prefs = getSharedPreferences("NFC_AUTH", MODE_PRIVATE);
@@ -150,7 +153,8 @@ public class ChangePasswordActivity extends BaseActionBarActivity {
                 editor.apply();
                 Log.d(TAG, "New 4-byte key and plain password saved to SharedPreferences.");
 
-                finish();
+                // Delay finish to allow dialog to show
+                findViewById(android.R.id.content).postDelayed(this::finish, 2500);
 
             } else {
                 String errorHex = (response_WP != null) ? Utils.byteArrayToHex(response_WP) : "null";

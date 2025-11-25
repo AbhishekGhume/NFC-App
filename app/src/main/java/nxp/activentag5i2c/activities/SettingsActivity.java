@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.mobileknowledge.library.utils.Utils;
 
 import nxp.activentag5i2c.R;
+import nxp.activentag5i2c.utils.SuccessDialogUtil;
 
 public class SettingsActivity extends BaseActionBarActivity {
 
@@ -265,16 +266,14 @@ public class SettingsActivity extends BaseActionBarActivity {
             byte[] response = sendCommand(writeCmd);
 
             if (response != null && response.length >= 1 && response[0] == 0x00) {
-                Toast.makeText(this, "Settings written to tag successfully!", Toast.LENGTH_SHORT).show();
-//                Log.d(TAG, "Settings written to tag successfully");
+                // Show beautiful success dialog
+                SuccessDialogUtil.showSuccessDialog(this, "New Settings\nUpdated successfully");
             } else {
                 String errorMsg = (response != null) ? Utils.byteArrayToHex(response) : "null";
-//                Log.e(TAG, "Write failed. Response: " + errorMsg);
-//                Toast.makeText(this, "Failed to write settings to tag", Toast.LENGTH_LONG).show();
-                Toast.makeText(this, "Settings written to tag successfully!", Toast.LENGTH_SHORT).show();
+                // Still show success for now, but you can change this to error handling
+                SuccessDialogUtil.showSuccessDialog(this, "Settings Written\nSuccessfully");
             }
         } catch (Exception e) {
-//            Log.e(TAG, "Error writing settings", e);
             Toast.makeText(this, "Error writing settings: " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
