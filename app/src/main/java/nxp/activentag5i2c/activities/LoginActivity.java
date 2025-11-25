@@ -25,9 +25,9 @@ public class LoginActivity extends BaseActivity {
     private EditText editTextPassword;
     private Button buttonLogin;
 
-    // Hardcoded credentials
+    // Hardcoded username
     private static final String VALID_USERNAME = "GHUMEAJ";
-    private static final String VALID_PASSWORD = "1234";
+    private static final String DEFAULT_PASSWORD = "1234";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,13 +61,18 @@ public class LoginActivity extends BaseActivity {
             return;
         }
 
-        // Validate credentials
+        // Validate username
         if (!username.equals(VALID_USERNAME)) {
             Toast.makeText(this, "Invalid Username", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        if (!password.equals(VALID_PASSWORD)) {
+        // Get the stored password from SharedPreferences
+        SharedPreferences prefs = getSharedPreferences("NFC_AUTH", MODE_PRIVATE);
+        String storedPassword = prefs.getString("password_plain", DEFAULT_PASSWORD);
+
+        // Validate password
+        if (!password.equals(storedPassword)) {
             Toast.makeText(this, "Invalid Password", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -80,7 +85,6 @@ public class LoginActivity extends BaseActivity {
         }
 
         // Save the 4-byte key to SharedPreferences for NFC operations
-        SharedPreferences prefs = getSharedPreferences("NFC_AUTH", MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString("password_hex", Utils.byteArrayToHex(nfcKey));
         editor.apply();

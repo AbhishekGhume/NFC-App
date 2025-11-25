@@ -27,8 +27,8 @@ public class ChangePasswordActivity extends BaseActionBarActivity {
     // NFC Commands
     final byte[] cmd_getRandomNumber = {0x12, (byte) 0xB2, 0x04};
     final byte CMD_SET_PASSWORD = (byte) 0xB3;
-    final byte CMD_WRITE_PASSWORD = (byte) 0xB4; // Command to write a new password
-    final byte PWD_IDENTIFIER_WRITE = 0x02; // Identifier for the "Write" password
+    final byte CMD_WRITE_PASSWORD = (byte) 0xB4;
+    final byte PWD_IDENTIFIER_WRITE = 0x02;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,12 +47,11 @@ public class ChangePasswordActivity extends BaseActionBarActivity {
 
     @Override
     protected void onNewIntent(android.content.Intent intent) {
-        super.onNewIntent(intent); // This will connect and call reAuthenticate() from BaseActivity
+        super.onNewIntent(intent);
         if (tag.getTechList()[0].equals("android.nfc.tech.NfcV")) {
             Snackbar.make(findViewById(android.R.id.content),
                     "NFC Tag Detected. Changing password...", Toast.LENGTH_SHORT).show();
 
-            // Now that the tag is tapped, run the change password logic
             handleChangePassword();
         }
     }
@@ -125,7 +124,6 @@ public class ChangePasswordActivity extends BaseActionBarActivity {
             Log.d(TAG, "NFC Step 2 (Auth) Success.");
 
             // --- 4. WRITE NEW PASSWORD (WRITE PASSWORD) ---
-            // This command (B4h) uses the *raw* 4-byte key, NOT the XORed one.
             byte[] cmd_writePassword = {
                     0x12,
                     CMD_WRITE_PASSWORD,
@@ -144,14 +142,15 @@ public class ChangePasswordActivity extends BaseActionBarActivity {
                 Log.d(TAG, "NFC Step 3 (Write) Success.");
                 Toast.makeText(this, "Password Changed Successfully!", Toast.LENGTH_SHORT).show();
 
-                // --- 5. UPDATE SharedPreferences with the NEW key ---
+                // --- 5. UPDATE SharedPreferences with BOTH the hex key AND plain password ---
                 SharedPreferences prefs = getSharedPreferences("NFC_AUTH", MODE_PRIVATE);
                 SharedPreferences.Editor editor = prefs.edit();
                 editor.putString("password_hex", Utils.byteArrayToHex(newPwdKey));
+                editor.putString("password_plain", newPasswordStr); // SAVE PLAIN PASSWORD
                 editor.apply();
-                Log.d(TAG, "New 4-byte key saved to SharedPreferences.");
+                Log.d(TAG, "New 4-byte key and plain password saved to SharedPreferences.");
 
-                finish(); // Close this activity and go back to MainActivity
+                finish();
 
             } else {
                 String errorHex = (response_WP != null) ? Utils.byteArrayToHex(response_WP) : "null";
