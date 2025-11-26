@@ -21,7 +21,7 @@ public class SuccessDialogUtil {
     public static void showSuccessDialog(Context context, String title, long duration) {
         // Create dialog
         final Dialog dialog = new Dialog(context);
-        dialog.setContentView(createDialogView(context));
+        dialog.setContentView(createDialogView(context, title));
 
         // Make background transparent
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -48,8 +48,8 @@ public class SuccessDialogUtil {
         showSuccessDialog(context, title, 2000);
     }
 
-    private static View createDialogView(Context context) {
-        // Main container
+    private static View createDialogView(Context context, String title) {
+        // Main container - fills entire screen and centers content
         LinearLayout mainContainer = new LinearLayout(context);
         mainContainer.setLayoutParams(new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -61,13 +61,14 @@ public class SuccessDialogUtil {
         // Dialog card (white background with rounded appearance)
         LinearLayout dialogCard = new LinearLayout(context);
         LinearLayout.LayoutParams cardParams = new LinearLayout.LayoutParams(
-                dpToPx(context, 300),
+                dpToPx(context, 280),
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
+        cardParams.gravity = Gravity.CENTER;
         dialogCard.setLayoutParams(cardParams);
         dialogCard.setOrientation(LinearLayout.VERTICAL);
         dialogCard.setGravity(Gravity.CENTER);
-        dialogCard.setPadding(dpToPx(context, 20), dpToPx(context, 30), dpToPx(context, 20), dpToPx(context, 30));
+        dialogCard.setPadding(dpToPx(context, 30), dpToPx(context, 40), dpToPx(context, 30), dpToPx(context, 40));
         dialogCard.setBackgroundColor(Color.WHITE);
 
         // Add shadow and rounded corners using custom background
@@ -76,11 +77,11 @@ public class SuccessDialogUtil {
         // Success checkmark icon
         ImageView checkIcon = new ImageView(context);
         LinearLayout.LayoutParams iconParams = new LinearLayout.LayoutParams(
-                dpToPx(context, 80),
-                dpToPx(context, 80)
+                dpToPx(context, 70),
+                dpToPx(context, 70)
         );
         iconParams.gravity = Gravity.CENTER_HORIZONTAL;
-        iconParams.bottomMargin = dpToPx(context, 20);
+        iconParams.bottomMargin = dpToPx(context, 16);
         checkIcon.setLayoutParams(iconParams);
 
         // Create checkmark drawable programmatically
@@ -88,20 +89,21 @@ public class SuccessDialogUtil {
         checkIcon.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
         dialogCard.addView(checkIcon);
 
-        // Success text
+        // Success text - PERFECTLY CENTERED
         TextView titleText = new TextView(context);
         LinearLayout.LayoutParams textParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
-        textParams.gravity = Gravity.CENTER_HORIZONTAL;
+        textParams.gravity = Gravity.CENTER;
         titleText.setLayoutParams(textParams);
-        titleText.setTextSize(18);
+        titleText.setTextSize(16);
         titleText.setTextColor(Color.parseColor("#1E3F82"));
         titleText.setTypeface(titleText.getTypeface(), android.graphics.Typeface.BOLD);
-        titleText.setGravity(Gravity.CENTER);
-        titleText.setMaxLines(2);
-        titleText.setText("✓ " + "New Settings\nUpdated successfully");
+        titleText.setGravity(Gravity.CENTER); // Center align text inside TextView
+        titleText.setMaxLines(3);
+        titleText.setLineSpacing(0, 1.2f); // Adjust line spacing for better centering
+        titleText.setText(title); // Use the passed title directly
         dialogCard.addView(titleText);
 
         mainContainer.addView(dialogCard);
